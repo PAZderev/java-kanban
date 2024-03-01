@@ -1,7 +1,7 @@
-package Tasks;
+package tasks;
 
-import TasksEnums.TaskStatus;
-import TasksEnums.TaskType;
+import tasksEnums.TaskStatus;
+import tasksEnums.TaskType;
 public class SubTask extends Task {
     private final TaskType taskType = TaskType.SUBTASK;
 

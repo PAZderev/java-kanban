@@ -1,7 +1,7 @@
-import Tasks.Epic;
-import Tasks.SubTask;
-import Tasks.Task;
-import TasksEnums.TaskType;
+import tasks.Epic;
+import tasks.SubTask;
+import tasks.Task;
+import tasksEnums.TaskType;
 
 import java.util.*;
 
@@ -37,9 +37,7 @@ public class TaskManager {
                 break;
             case EPIC:
                 epics.clear();
-                for (SubTask subTask : getSubTasks()) { // Обновляем subTasks, т.к. эпиков больше не существует
-                    subTask.setEpicID(0); // Хотя по-хорошему их просто удалить нужно
-                }
+                subTasks.clear(); // Удаляем subTasks, т.к. эпиков больше не существует
                 break;
             case SUBTASK:
                 for (SubTask subTask : getSubTasks()) { // Обновляем эпики, т.к. удалили subTasks
@@ -113,7 +111,7 @@ public class TaskManager {
 
     public void removeEpicByID(int id) {
         for (SubTask subTask : getSubTasksByEpic(getEpicById(id))) {
-            subTask.setEpicID(0);
+            removeSubTaskByID(subTask.getId());
         }
         epics.remove(id);
     }

@@ -8,6 +8,9 @@ public class SubTask extends Task {
     private int epicID;
     public SubTask(String name, String description, TaskStatus status, int epicID) {
         super(name, description, status);
+        if (this.getId() == epicID) {
+            throw new IllegalArgumentException("EpicID не может равняться SubTaskID");
+        }
         this.epicID = epicID;
     }
 

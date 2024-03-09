@@ -7,6 +7,7 @@ import tasks.Task;
 import tasksEnums.TaskStatus;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,7 +30,7 @@ class InMemoryHistoryManagerTest {
             inMemoryTaskManager.getEpicById(epic.getId());
         }
         System.out.println("TEST : addAndGetHistory");
-        ArrayList<Task> history = inMemoryTaskManager.getInMemoryHistoryManager().getHistory();
+        List<Task> history = inMemoryTaskManager.getInMemoryHistoryManager().getHistory();
         System.out.println(history);
         inMemoryTaskManager.getEpicById(epic.getId());
         System.out.println(inMemoryTaskManager.getInMemoryHistoryManager().getHistory());

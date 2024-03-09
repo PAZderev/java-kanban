@@ -4,12 +4,13 @@ import tasksEnums.TaskStatus;
 import tasksEnums.TaskType;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class Epic extends Task {
     private final TaskType taskType = TaskType.EPIC;
 
-    private final HashMap<Integer, TaskStatus> subTasks; // Подзадачи будем хранить в HashMap, где ключ - айдишник, а
+    private final Map<Integer, TaskStatus> subTasks; // Подзадачи будем хранить в HashMap, где ключ - айдишник, а
     // значение - статус задачи. Статусы задачи понадобятся для определения статуса эпика в методе updateCounterAndStatus
 
 

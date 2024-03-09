@@ -7,6 +7,7 @@ import tasksEnums.TaskType;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public interface TaskManager {
     Collection<Task> getTasks();
@@ -42,5 +43,5 @@ public interface TaskManager {
 
     void removeSubTaskByID(int id);
 
-    ArrayList<SubTask> getSubTasksByEpic(Epic epic);
+    List<SubTask> getSubTasksByEpic(Epic epic);
 }

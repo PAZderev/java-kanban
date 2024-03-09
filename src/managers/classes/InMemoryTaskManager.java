@@ -12,9 +12,9 @@ public class InMemoryTaskManager implements TaskManager {
 
 
     //
-    private final HashMap<Integer, Task> tasks;
-    private final HashMap<Integer, SubTask> subTasks;
-    private final HashMap<Integer, Epic> epics;
+    private final Map<Integer, Task> tasks;
+    private final Map<Integer, SubTask> subTasks;
+    private final Map<Integer, Epic> epics;
 
     HistoryManager inMemoryHistoryManager;
 
@@ -124,7 +124,7 @@ public class InMemoryTaskManager implements TaskManager {
     public void updateEpic(Epic epic) {
 
 
-        ArrayList<SubTask> oldSubTasksTemp = getSubTasksByEpic(epic);
+        List<SubTask> oldSubTasksTemp = getSubTasksByEpic(epic);
         HashSet<SubTask> newSubTasks = new HashSet<>(getSubTasksByEpic(epic));
         HashSet<SubTask> oldSubTasks = new HashSet<>(oldSubTasksTemp);
         oldSubTasks.removeAll(newSubTasks);
@@ -156,7 +156,7 @@ public class InMemoryTaskManager implements TaskManager {
         subTasks.remove(id);
     }
     @Override
-    public ArrayList<SubTask> getSubTasksByEpic(Epic epic) {
+    public List<SubTask> getSubTasksByEpic(Epic epic) {
         ArrayList<SubTask> subTasksByEpic = new ArrayList<>();
         for (int id : epic.getSubTasks()) {
             subTasksByEpic.add(getSubTaskById(id));

@@ -94,7 +94,7 @@ class InMemoryTaskManagerTest {
 
         SubTask subTask1 = new SubTask("Sub2","Desc2",TaskStatus.NEW,epic1.getId());
         inMemoryTaskManager.createSubTask(subTask1);
-        System.out.println("TEST: updateEpic");
+        System.out.println("TEST: updateEpic, проверка статусов эпика реализована через assertEquals");
         System.out.println(inMemoryTaskManager.getSubTasksByEpic(inMemoryTaskManager.getEpicById(epic1.getId())));
         assertEquals(inMemoryTaskManager.getEpicById(epic1.getId()).getStatus(), TaskStatus.IN_PROGRESS);
         inMemoryTaskManager.removeSubTaskByID(subTask1.getId());

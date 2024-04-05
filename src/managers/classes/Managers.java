@@ -1,11 +1,12 @@
 package managers.classes;
 
 import managers.interfaces.HistoryManager;
+import managers.interfaces.TaskManager;
 
 public class Managers {
-    private InMemoryTaskManager inMemoryTaskManager;
+    private TaskManager inMemoryTaskManager;
 
-    public InMemoryTaskManager getDefault() {
+    public TaskManager getDefault() {
         if (inMemoryTaskManager == null) {
             inMemoryTaskManager = new InMemoryTaskManager();
         }

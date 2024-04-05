@@ -1,11 +1,13 @@
 package managers.classes;
 
+import managers.interfaces.TaskManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Task;
 import utils.enums.TaskStatus;
-import utils.TaskLinkedList;
+
+import java.util.List;
 
 class InMemoryHistoryManagerTest {
     /*
@@ -14,7 +16,7 @@ class InMemoryHistoryManagerTest {
     Сеттеры в классах задач не влияют на работу менеджера, т.к. статус эпика и сабтаски вручную изменить нельзя, а только
     они могут оказать влияние на работу. (обновление их статусов реализовано через методы Update)
      */
-    static InMemoryTaskManager inMemoryTaskManager;
+    static TaskManager inMemoryTaskManager;
 
     @BeforeAll
     public static void initializeTaskManger() {
@@ -33,7 +35,7 @@ class InMemoryHistoryManagerTest {
             inMemoryTaskManager.getTaskById(task.getId());
         }
         System.out.println("TEST : addAndGetHistory, ожидаем две задачи в истории, эпик первый");
-        TaskLinkedList history = inMemoryTaskManager.getInMemoryHistoryManager().getHistory();
+        List<Task> history = inMemoryTaskManager.getInMemoryHistoryManager().getHistory();
         System.out.println(history);
         inMemoryTaskManager.getEpicById(epic.getId());
         System.out.println("Ожидаем две задачи в истории, эпик второй");

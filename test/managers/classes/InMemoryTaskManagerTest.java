@@ -1,5 +1,6 @@
 package managers.classes;
 
+import managers.interfaces.TaskManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
@@ -12,7 +13,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 class InMemoryTaskManagerTest {
 
-    InMemoryTaskManager inMemoryTaskManager;
+    TaskManager inMemoryTaskManager;
 
     @BeforeEach
     public void initializeTaskManger() {

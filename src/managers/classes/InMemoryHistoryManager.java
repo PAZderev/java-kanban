@@ -6,6 +6,7 @@ import utils.TaskLinkedList;
 import utils.TaskNode;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
@@ -21,8 +22,8 @@ public class InMemoryHistoryManager implements HistoryManager {
     }
 
     @Override
-    public TaskLinkedList getHistory() {
-        return history;
+    public List<Task> getHistory() {
+        return history.linkedListToList();
     }
 
     @Override

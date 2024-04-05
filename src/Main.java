@@ -1,6 +1,6 @@
-import managers.classes.InMemoryTaskManager;
 import managers.classes.Managers;
 import managers.interfaces.HistoryManager;
+import managers.interfaces.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) {
         // Доп. задание спринт №6
         Managers manager = new Managers();
-        InMemoryTaskManager inMemoryTaskManager = manager.getDefault();
+        TaskManager inMemoryTaskManager = manager.getDefault();
         HistoryManager inMemoryHistoryManager = inMemoryTaskManager.getInMemoryHistoryManager();
         // Создание задач
         inMemoryTaskManager.createTask(new Task("Task 1", "Desc of Task 1", TaskStatus.NEW));

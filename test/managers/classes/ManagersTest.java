@@ -1,5 +1,6 @@
 package managers.classes;
 
+import managers.interfaces.TaskManager;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +10,7 @@ class ManagersTest {
     @Test
     void getDefault() {
         Managers managers = new Managers();
-        InMemoryTaskManager test = managers.getDefault();
+        TaskManager test = managers.getDefault();
         assertNotNull(test);
     }
 

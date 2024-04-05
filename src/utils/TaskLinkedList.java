@@ -61,15 +61,18 @@ public class TaskLinkedList {
         size--;
     }
 
+    public List<Task> linkedListToList() {
+        List<Task> linkedListToList = new ArrayList<>();
+        TaskNode currentNode = head;
+        while (currentNode != null) {
+            linkedListToList.add(currentNode.value);
+            currentNode = currentNode.next;
+        }
+        return linkedListToList;
+    }
 
     @Override
     public String toString() {
-        List<Task> linkedListToString = new ArrayList<>();
-        TaskNode currentNode = head;
-        while (currentNode != null) {
-            linkedListToString.add(currentNode.value);
-            currentNode = currentNode.next;
-        }
-        return linkedListToString.toString();
+        return linkedListToList().toString();
     }
 }

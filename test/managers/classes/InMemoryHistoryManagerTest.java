@@ -4,7 +4,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import tasks.Epic;
 import tasks.Task;
-import tasksEnums.TaskStatus;
+import utils.enums.TaskStatus;
 import utils.TaskLinkedList;
 
 class InMemoryHistoryManagerTest {

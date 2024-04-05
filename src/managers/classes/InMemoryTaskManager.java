@@ -5,7 +5,7 @@ import managers.interfaces.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import tasksEnums.TaskType;
+import utils.enums.TaskType;
 
 import java.util.*;
 

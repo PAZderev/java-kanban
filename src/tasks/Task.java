@@ -1,7 +1,7 @@
 package tasks;
 
-import tasksEnums.TaskStatus;
-import tasksEnums.TaskType;
+import utils.enums.TaskStatus;
+import utils.enums.TaskType;
 
 import java.util.Objects;
 

@@ -1,12 +1,12 @@
 package managers.classes;
 
 import managers.interfaces.HistoryManager;
-import managers.interfaces.TaskManager;
 import tasks.Task;
 import utils.TaskLinkedList;
 import utils.TaskNode;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
 

@@ -7,11 +7,6 @@ import tasks.Task;
 import tasksEnums.TaskStatus;
 import utils.TaskLinkedList;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class InMemoryHistoryManagerTest {
     /*
     По поводу предлагаемых тестов в 6 спринте: В моей реализации ID статически увеличивается, поэтому у меня не может
@@ -20,18 +15,20 @@ class InMemoryHistoryManagerTest {
     они могут оказать влияние на работу. (обновление их статусов реализовано через методы Update)
      */
     static InMemoryTaskManager inMemoryTaskManager;
+
     @BeforeAll
     public static void initializeTaskManger() {
         Managers managers = new Managers();
         inMemoryTaskManager = managers.getDefault();
     }
+
     @Test
     void addAndGetHistory() {
         Task task = new Task("Task1", "Desc1", TaskStatus.NEW);
         inMemoryTaskManager.createTask(task);
-        Epic epic = new Epic("Epic1","Desc1",TaskStatus.NEW);
+        Epic epic = new Epic("Epic1", "Desc1", TaskStatus.NEW);
         inMemoryTaskManager.createEpic(epic);
-        for (int i = 0; i < 5;i++) {
+        for (int i = 0; i < 5; i++) {
             inMemoryTaskManager.getEpicById(epic.getId());
             inMemoryTaskManager.getTaskById(task.getId());
         }
@@ -45,7 +42,6 @@ class InMemoryHistoryManagerTest {
 
 
     }
-
 
 
 }

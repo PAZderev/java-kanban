@@ -1,8 +1,6 @@
-import managers.classes.InMemoryHistoryManager;
 import managers.classes.InMemoryTaskManager;
 import managers.classes.Managers;
 import managers.interfaces.HistoryManager;
-import managers.interfaces.TaskManager;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
@@ -17,18 +15,18 @@ public class Main {
         InMemoryTaskManager inMemoryTaskManager = manager.getDefault();
         HistoryManager inMemoryHistoryManager = inMemoryTaskManager.getInMemoryHistoryManager();
         // Создание задач
-        inMemoryTaskManager.createTask(new Task("Task 1","Desc of Task 1",TaskStatus.NEW));
-        inMemoryTaskManager.createTask(new Task("Task 2","Desc of Task 2",TaskStatus.DONE));
+        inMemoryTaskManager.createTask(new Task("Task 1", "Desc of Task 1", TaskStatus.NEW));
+        inMemoryTaskManager.createTask(new Task("Task 2", "Desc of Task 2", TaskStatus.DONE));
 
         Epic epic1 = new Epic("Epic 1", "Desc of Epic 1", TaskStatus.DONE);
         inMemoryTaskManager.createEpic(epic1);
-        SubTask subTask1 = new SubTask("Sub Task1","Desc of Sub Task1", TaskStatus.NEW,epic1.getId());
+        SubTask subTask1 = new SubTask("Sub Task1", "Desc of Sub Task1", TaskStatus.NEW, epic1.getId());
         inMemoryTaskManager.createSubTask(subTask1);
-        SubTask subTask2 = new SubTask("Sub Task2", "Desc of Sub Task2", TaskStatus.DONE,epic1.getId());
+        SubTask subTask2 = new SubTask("Sub Task2", "Desc of Sub Task2", TaskStatus.DONE, epic1.getId());
         inMemoryTaskManager.createSubTask(subTask2);
-        SubTask subTask3 = new SubTask("Sub Task3", "Desc of Sub Task3", TaskStatus.DONE,epic1.getId());
+        SubTask subTask3 = new SubTask("Sub Task3", "Desc of Sub Task3", TaskStatus.DONE, epic1.getId());
         inMemoryTaskManager.createSubTask(subTask3);
-        Epic epic2 = new Epic("Epic 2" , "Desc of Epic 2", TaskStatus.IN_PROGRESS);
+        Epic epic2 = new Epic("Epic 2", "Desc of Epic 2", TaskStatus.IN_PROGRESS);
         inMemoryTaskManager.createEpic(epic2);
 
         inMemoryTaskManager.getTaskById(1);
@@ -49,10 +47,6 @@ public class Main {
         inMemoryTaskManager.removeEpicByID(epic1.getId());
         System.out.println("Ожидаем Task2,Epic2");
         System.out.println(inMemoryHistoryManager.getHistory());
-
-
-
-
 
 
     }

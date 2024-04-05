@@ -10,9 +10,11 @@ public class TaskLinkedList {
     private TaskNode head;
     private TaskNode tail;
     private int size;
+
     public TaskLinkedList() {
 
     }
+
     public TaskNode add(Task task) {
         if (task == null) {
             return null;

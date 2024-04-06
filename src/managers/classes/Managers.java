@@ -5,7 +5,7 @@ import managers.interfaces.TaskManager;
 
 public class Managers {
     private TaskManager inMemoryTaskManager;
-
+    private static HistoryManager inMemoryHistoryManager;
     public TaskManager getDefault() {
         if (inMemoryTaskManager == null) {
             inMemoryTaskManager = new InMemoryTaskManager();
@@ -14,6 +14,9 @@ public class Managers {
     }
 
     public static HistoryManager getDefaultHistory() {
-        return new InMemoryHistoryManager();
+        if (inMemoryHistoryManager == null) {
+            inMemoryHistoryManager = new InMemoryHistoryManager();
+        }
+        return inMemoryHistoryManager;
     }
 }

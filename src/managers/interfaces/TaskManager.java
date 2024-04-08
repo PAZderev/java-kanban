@@ -3,9 +3,8 @@ package managers.interfaces;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import tasksEnums.TaskType;
+import utils.enums.TaskType;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,6 +14,7 @@ public interface TaskManager {
     Collection<SubTask> getSubTasks();
 
     Collection<Epic> getEpics();
+
     HistoryManager getInMemoryHistoryManager();
 
     void removeAllTasksByType(TaskType taskType);

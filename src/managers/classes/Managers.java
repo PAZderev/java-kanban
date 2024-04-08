@@ -1,12 +1,13 @@
 package managers.classes;
 
-import managers.classes.InMemoryHistoryManager;
-import managers.classes.InMemoryTaskManager;
 import managers.interfaces.HistoryManager;
+import managers.interfaces.TaskManager;
 
 public class Managers {
-    private InMemoryTaskManager inMemoryTaskManager;
-    public InMemoryTaskManager getDefault() {
+    private TaskManager inMemoryTaskManager;
+    private static HistoryManager inMemoryHistoryManager;
+
+    public TaskManager getDefault() {
         if (inMemoryTaskManager == null) {
             inMemoryTaskManager = new InMemoryTaskManager();
         }
@@ -14,6 +15,9 @@ public class Managers {
     }
 
     public static HistoryManager getDefaultHistory() {
-        return new InMemoryHistoryManager();
+        if (inMemoryHistoryManager == null) {
+            inMemoryHistoryManager = new InMemoryHistoryManager();
+        }
+        return inMemoryHistoryManager;
     }
 }

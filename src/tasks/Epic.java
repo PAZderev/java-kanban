@@ -1,7 +1,7 @@
 package tasks;
 
-import tasksEnums.TaskStatus;
-import tasksEnums.TaskType;
+import utils.enums.TaskStatus;
+import utils.enums.TaskType;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,41 +14,41 @@ public class Epic extends Task {
     // значение - статус задачи. Статусы задачи понадобятся для определения статуса эпика в методе updateCounterAndStatus
 
 
-
     private final HashMap<TaskStatus, Integer> tasksCounterByStatus; // Словарь для подсчета подзадач в определенном статусе
+
     public Epic(String name, String description, TaskStatus status) {
         super(name, description, TaskStatus.NEW); // т.к. любой эпик сначала будет NEW
         subTasks = new HashMap<>();
         tasksCounterByStatus = new HashMap<>();
-        tasksCounterByStatus.put(TaskStatus.NEW,0);
-        tasksCounterByStatus.put(TaskStatus.DONE,0);
-        tasksCounterByStatus.put(TaskStatus.IN_PROGRESS,0);
+        tasksCounterByStatus.put(TaskStatus.NEW, 0);
+        tasksCounterByStatus.put(TaskStatus.DONE, 0);
+        tasksCounterByStatus.put(TaskStatus.IN_PROGRESS, 0);
     }
 
-    public Epic (Epic epic) { // Дополнительный конструктор для создания копий без обновления id
+    public Epic(Epic epic) { // Дополнительный конструктор для создания копий без обновления id
         super(epic);
         subTasks = new HashMap<>();
         tasksCounterByStatus = new HashMap<>();
-        tasksCounterByStatus.put(TaskStatus.NEW,0);
-        tasksCounterByStatus.put(TaskStatus.DONE,0);
-        tasksCounterByStatus.put(TaskStatus.IN_PROGRESS,0);
+        tasksCounterByStatus.put(TaskStatus.NEW, 0);
+        tasksCounterByStatus.put(TaskStatus.DONE, 0);
+        tasksCounterByStatus.put(TaskStatus.IN_PROGRESS, 0);
     }
 
-    public void addSubTask (SubTask subTask) { // Учитываем, что EpicID указан корректно
-        subTasks.put(subTask.getId(),subTask.getStatus());
-        updateCounterAndStatus(subTask.getStatus(),"+");
+    public void addSubTask(SubTask subTask) { // Учитываем, что EpicID указан корректно
+        subTasks.put(subTask.getId(), subTask.getStatus());
+        updateCounterAndStatus(subTask.getStatus(), "+");
     }
 
-    public void removeSubTask (SubTask subTask) {
+    public void removeSubTask(SubTask subTask) {
         subTasks.remove(subTask.getId());
-        updateCounterAndStatus(subTask.getStatus(),"-");
+        updateCounterAndStatus(subTask.getStatus(), "-");
     }
 
     /*
     Метод получает на вход статус подзадачи, которую добавили/удалили и знак. Знак равен +, когда добавили и минус в обратном
     случае. Рассчитываем количество подзадач в статусах и на основе словаря tasksCounterByStatus определяем статус эпика.
      */
-    private void updateCounterAndStatus (TaskStatus subTaskStatus, String sign) {
+    private void updateCounterAndStatus(TaskStatus subTaskStatus, String sign) {
         int diff;
         if (sign.equals("+")) {
             diff = 1;
@@ -75,6 +75,7 @@ public class Epic extends Task {
     public Set<Integer> getSubTasks() {
         return subTasks.keySet();
     }
+
     @Override
     public TaskStatus getStatus() {
         if (tasksCounterByStatus.get(TaskStatus.DONE) == subTasks.size() && !subTasks.isEmpty()) {

@@ -1,7 +1,7 @@
 package tasks;
 
-import tasksEnums.TaskStatus;
-import tasksEnums.TaskType;
+import utils.enums.TaskStatus;
+import utils.enums.TaskType;
 
 import java.util.Objects;
 
@@ -12,7 +12,8 @@ public class Task {
     private final int id;
     private static int idCounter;
     private TaskStatus status;
-    public Task (String name, String description, TaskStatus status) {
+
+    public Task(String name, String description, TaskStatus status) {
         this.name = name;
         this.description = description;
         this.status = status;

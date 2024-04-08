@@ -1,24 +1,29 @@
 package managers.classes;
 
 import managers.interfaces.HistoryManager;
-import managers.interfaces.TaskManager;
 import tasks.Task;
+import utils.TaskLinkedList;
+import utils.TaskNode;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class InMemoryHistoryManager implements HistoryManager {
 
-    final static int MAX_HISTORY_SIZE = 10;
-    private List<Task> history;
+
+    private final TaskLinkedList history;
+
+    private final Map<Integer, TaskNode> idToTaskNode;
 
     public InMemoryHistoryManager() {
-        this.history = new ArrayList<>();
+        this.history = new TaskLinkedList();
+        this.idToTaskNode = new HashMap<>();
     }
 
     @Override
     public List<Task> getHistory() {
-        return history;
+        return history.linkedListToList();
     }
 
     @Override
@@ -26,13 +31,14 @@ public class InMemoryHistoryManager implements HistoryManager {
         if (task == null) {
             return;
         }
-        if (history.size() < MAX_HISTORY_SIZE) {
+        history.removeByLink(idToTaskNode.get(task.getId())); // удаляем запись, если она есть
+        TaskNode newNode = history.add(task);
+        idToTaskNode.put(task.getId(), newNode);
+    }
 
-            history.add(task);
-        }
-        else {
-            history.removeFirst();
-            history.add(task);
-        }
+    @Override
+    public void remove(int id) {
+        history.removeByLink(idToTaskNode.get(id));
+        idToTaskNode.remove(id);
     }
 }

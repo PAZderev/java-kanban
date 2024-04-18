@@ -21,11 +21,18 @@ public class Task {
         id = idCounter;
     }
 
-    public Task(Task task) { // Дополнительный конструктор для создания копий без обновления id
+    public Task(Task task) {
         this.name = task.name;
         this.description = task.description;
         this.status = task.status;
         this.id = task.id;
+    }
+
+    protected Task(int id, String name, TaskStatus status, String description) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.status = status;
     }
 
     public String getName() {
@@ -44,6 +51,10 @@ public class Task {
         return idCounter;
     }
 
+    public static void increaseIdCounter() {
+        idCounter++;
+    }
+
     public TaskStatus getStatus() {
         return status;
     }
@@ -58,6 +69,12 @@ public class Task {
 
     public void setStatus(TaskStatus status) {
         this.status = status;
+    }
+
+    public static Task fromString(String value) {
+        String[] params = value.split(",");
+        Task.increaseIdCounter();
+        return new Task(Integer.parseInt(params[0]), params[2], TaskStatus.valueOf(params[3]), params[4]);
     }
 
     @Override
@@ -75,12 +92,6 @@ public class Task {
 
     @Override
     public String toString() {
-        return "Task{" +
-                "taskType=" + taskType +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", id=" + id +
-                ", status=" + status +
-                '}';
+        return String.format("%d,%s,%s,%s,%s,", id, taskType, name, status, description);
     }
 }

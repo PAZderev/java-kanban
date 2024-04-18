@@ -34,6 +34,15 @@ public class Epic extends Task {
         tasksCounterByStatus.put(TaskStatus.IN_PROGRESS, 0);
     }
 
+    protected Epic(int id, String name, TaskStatus status, String description) {
+        super(id, name, status, description);
+        subTasks = new HashMap<>();
+        tasksCounterByStatus = new HashMap<>();
+        tasksCounterByStatus.put(TaskStatus.NEW, 0);
+        tasksCounterByStatus.put(TaskStatus.DONE, 0);
+        tasksCounterByStatus.put(TaskStatus.IN_PROGRESS, 0);
+    }
+
     public void addSubTask(SubTask subTask) { // Учитываем, что EpicID указан корректно
         subTasks.put(subTask.getId(), subTask.getStatus());
         updateCounterAndStatus(subTask.getStatus(), "+");
@@ -90,19 +99,18 @@ public class Epic extends Task {
         return TaskStatus.IN_PROGRESS;
     }
 
+    public static Epic fromString(String value) {
+        String[] params = value.split(",");
+        Task.increaseIdCounter();
+        return new Epic(Integer.parseInt(params[0]), params[2], TaskStatus.valueOf(params[3]), params[4]);
+    }
+
     public HashMap<TaskStatus, Integer> getTasksCounterByStatus() {
         return tasksCounterByStatus;
     }
 
     @Override
     public String toString() {
-        return "Epic{" +
-                "taskType=" + taskType +
-                ", name='" + getName() + '\'' +
-                ", description='" + getDescription() + '\'' +
-                ", id=" + getId() +
-                ", status=" + getStatus() +
-                ", subTasks=" + getSubTasks() +
-                '}';
+        return String.format("%d,%s,%s,%s,%s,", getId(), taskType, getName(), getStatus(), getDescription());
     }
 }

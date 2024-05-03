@@ -97,8 +97,6 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createEpic(Epic epic) {
-        // Проверка на то, что пользователь отправил задачу с верным ID (с последним созданным в системе)
-        if (epic.getId() != Task.getIdCounter()) return;
         Epic newEpic = new Epic(epic);
         epics.put(epic.getId(), newEpic);
         // Предполагается, что невозможно создать subTask с epicID, который еще не существует, поэтому проверки
@@ -107,14 +105,12 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void createTask(Task task) {
-        if (task.getId() != Task.getIdCounter()) return;
         Task newTask = new Task(task);
         tasks.put(task.getId(), newTask);
     }
 
     @Override
     public void createSubTask(SubTask subTask) {
-        if (subTask.getId() != Task.getIdCounter()) return;
         SubTask newSubTask = new SubTask(subTask);
         if (getEpicById(newSubTask.getEpicID()) != null) {
             getEpicById(newSubTask.getEpicID()).addSubTask(newSubTask); // Добавили subTask в эпик

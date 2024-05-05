@@ -41,4 +41,11 @@ public class InMemoryHistoryManager implements HistoryManager {
         history.removeByLink(idToTaskNode.get(id));
         idToTaskNode.remove(id);
     }
+
+    // Метод необходимый для корректной работы тестов при их параллельном запуске.
+    // Так как поле history статичное, то невозможно корректно проверять историю без очищения.
+    public void clearHistory() {
+        history.clearList();
+        idToTaskNode.clear();
+    }
 }

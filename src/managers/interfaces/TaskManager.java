@@ -15,6 +15,8 @@ public interface TaskManager {
 
     Collection<Epic> getEpics();
 
+    Collection<Task> getPrioritizedTasks();
+
     HistoryManager getInMemoryHistoryManager();
 
     void removeAllTasksByType(TaskType taskType);

@@ -1,34 +1,58 @@
 package managers.classes;
 
 import managers.interfaces.TaskManager;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
 import tasks.Epic;
 import tasks.Task;
 import utils.enums.TaskStatus;
 
+import java.time.Duration;
 import java.util.List;
 
 class InMemoryHistoryManagerTest {
-    /*
-    По поводу предлагаемых тестов в 6 спринте: В моей реализации ID статически увеличивается, поэтому у меня не может
-    быть ситуаций, когда старый удаленный id где-то сохранился в менеджере.
-    Сеттеры в классах задач не влияют на работу менеджера, т.к. статус эпика и сабтаски вручную изменить нельзя, а только
-    они могут оказать влияние на работу. (обновление их статусов реализовано через методы Update)
-     */
+
     static TaskManager inMemoryTaskManager;
 
-    @BeforeAll
-    public static void initializeTaskManger() {
+    @BeforeEach
+    public void initializeTaskManger() {
         Managers managers = new Managers();
         inMemoryTaskManager = managers.getDefault();
+        inMemoryTaskManager.getInMemoryHistoryManager().clearHistory();
+    }
+
+    @Test
+    void emptyHistoryTest() {
+        assertEquals(inMemoryTaskManager.getInMemoryHistoryManager().getHistory().size(), 0);
+    }
+
+    @Test
+    void doubleCallTaskTest() {
+        Task task = new Task("Task1", "Desc1", TaskStatus.NEW, Duration.ofSeconds(30), null);
+        inMemoryTaskManager.createTask(task);
+        inMemoryTaskManager.getTaskById(task.getId());
+        inMemoryTaskManager.getTaskById(task.getId());
+        assertEquals(inMemoryTaskManager.getInMemoryHistoryManager().getHistory().size(), 1);
+    }
+
+    @Test
+    void removeFromHistoryTest() {
+        Task task = new Task("Task1", "Desc1", TaskStatus.NEW, Duration.ofSeconds(30), null);
+        inMemoryTaskManager.createTask(task);
+        inMemoryTaskManager.getTaskById(task.getId());
+        inMemoryTaskManager.removeTaskByID(task.getId());
+        assertEquals(inMemoryTaskManager.getInMemoryHistoryManager().getHistory().size(), 0);
     }
 
     @Test
     void addAndGetHistory() {
-        Task task = new Task("Task1", "Desc1", TaskStatus.NEW);
+        Task task = new Task("Task1", "Desc1", TaskStatus.NEW, Duration.ofSeconds(30), null);
         inMemoryTaskManager.createTask(task);
-        Epic epic = new Epic("Epic1", "Desc1", TaskStatus.NEW);
+        Epic epic = new Epic("Epic1", "Desc1", TaskStatus.NEW, Duration.ofSeconds(30), null);
         inMemoryTaskManager.createEpic(epic);
         for (int i = 0; i < 5; i++) {
             inMemoryTaskManager.getEpicById(epic.getId());

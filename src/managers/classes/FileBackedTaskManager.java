@@ -3,7 +3,6 @@ package managers.classes;
 import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
-import utils.enums.TaskStatus;
 import utils.enums.TaskType;
 import utils.exceptions.ManagerSaveException;
 
@@ -11,14 +10,26 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.stream.Stream;
+import java.util.Collection;
+
 
 public class FileBackedTaskManager extends InMemoryTaskManager {
+    public static final int MIN_PARAMS_LENGTH = 7;
+    public static final int TASK_ID = 0;
+    public static final int TASK_TYPE = 1;
+    public static final int TASK_NAME = 2;
+    public static final int TASK_STATUS = 3;
+    public static final int TASK_DESCRIPTION = 4;
+    public static final int TASK_DURATION = 5;
+    public static final int TASK_START_TIME = 6;
+    public static final int TASK_EPIC = 7;
 
 
     private final Path memoryFile;
     private boolean loadingMode = false;
 
-    FileBackedTaskManager(Path memoryFile) {
+    public FileBackedTaskManager(Path memoryFile) {
         super();
         if (!memoryFile.toFile().exists()) {
             try {
@@ -37,16 +48,16 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
 
     public void save() {
         try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(memoryFile.toFile(), StandardCharsets.UTF_8))) {
-            fileWriter.write("id,type,name,status,description,epic");
-            for (Task task : getTasks()) {
-                fileWriter.write("\n" + task.toString());
-            }
-            for (SubTask subTask : getSubTasks()) {
-                fileWriter.write("\n" + subTask.toString());
-            }
-            for (Epic epic : getEpics()) {
-                fileWriter.write("\n" + epic.toString());
-            }
+            fileWriter.write("id,type,name,status,description,duration,startTime,epic");
+            Stream.of(getTasks(), getSubTasks(), getEpics())
+                    .flatMap(Collection::stream)  // Преобразуем Stream<Collection<Task>> в Stream<Task>
+                    .forEach(task -> {
+                        try {
+                            fileWriter.write("\n" + task.toString());  // Записываем каждую задачу в файл
+                        } catch (IOException e) {
+                            throw new ManagerSaveException("Ошибка при записи задачи в файл");
+                        }
+                    });
         } catch (IOException e) {
             throw new ManagerSaveException("Ошибка во время сохранения файла");
         }
@@ -62,7 +73,7 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
             while (fileReader.ready()) {
                 String line = fileReader.readLine();
                 String[] params = line.split(",");
-                if (params.length < 5) { // Необходимо минимум 5 элементов для правильной десериализации
+                if (params.length < MIN_PARAMS_LENGTH) { // Необходимо минимум 7 элементов для правильной десериализации
                     throw new ManagerSaveException("Ошибка во время чтения файла");
                 }
                 switch (TaskType.valueOf(params[1])) {
@@ -152,37 +163,5 @@ public class FileBackedTaskManager extends InMemoryTaskManager {
     public void removeSubTaskByID(int id) {
         super.removeSubTaskByID(id);
         save();
-    }
-
-
-    /* Доп задание, спринт №7
-    В ходе выполнения задания возник вопрос, метод loadFromFile должен возвращать экземпляр класса,
-    который ссылается на тот же самый файл, переданный в метод или должен создавать новый файл?
-     (если должен новый, то в какой папке? В "домашней" (в которой находимся по дефолту)?
-     У меня реализован первый вариант.
-     */
-    public static void main(String[] args) throws IOException {
-        FileBackedTaskManager fileBackedTaskManager =
-                new FileBackedTaskManager(File.createTempFile("main", ".txt").toPath());
-        fileBackedTaskManager.createTask(new Task("Task 1", "Desc 1", TaskStatus.NEW));
-        fileBackedTaskManager.createEpic(new Epic("Epic 1", "Desc 2", TaskStatus.IN_PROGRESS));
-        fileBackedTaskManager.createSubTask(new SubTask("Sub Task 1", "Desc 3",
-                TaskStatus.IN_PROGRESS, 2));
-        fileBackedTaskManager.createTask(new Task("Task 2", "Desc 4", TaskStatus.DONE));
-        fileBackedTaskManager.createEpic(new Epic("Epic 2", "Desc 5", TaskStatus.DONE));
-        fileBackedTaskManager.createSubTask(new SubTask("Sub Task 2", "Desc 6",
-                TaskStatus.DONE, 5));
-        System.out.println("Данные менеджера созданного вручную");
-        System.out.println(fileBackedTaskManager.getTasks());
-        System.out.println(fileBackedTaskManager.getSubTasks());
-        System.out.println(fileBackedTaskManager.getEpics());
-        FileBackedTaskManager fileBackedTaskManagerFromFile =
-                FileBackedTaskManager.loadFromFile(fileBackedTaskManager.getMemoryFile().toFile());
-        System.out.println();
-        System.out.println("Данные менеджера созданного из файла");
-        System.out.println(fileBackedTaskManagerFromFile.getTasks());
-        System.out.println(fileBackedTaskManagerFromFile.getSubTasks());
-        System.out.println(fileBackedTaskManagerFromFile.getEpics());
-
     }
 }

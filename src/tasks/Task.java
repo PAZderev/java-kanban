@@ -3,7 +3,11 @@ package tasks;
 import utils.enums.TaskStatus;
 import utils.enums.TaskType;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Objects;
+
+import static managers.classes.FileBackedTaskManager.*;
 
 public class Task {
     private final TaskType taskType = TaskType.TASK;
@@ -12,13 +16,17 @@ public class Task {
     private final int id;
     private static int idCounter;
     private TaskStatus status;
+    private Duration duration;
+    private LocalDateTime startTime;
 
-    public Task(String name, String description, TaskStatus status) {
+    public Task(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
         this.name = name;
         this.description = description;
         this.status = status;
         idCounter++;
         id = idCounter;
+        this.startTime = startTime;
+        this.duration = duration;
     }
 
     public Task(Task task) {
@@ -26,13 +34,17 @@ public class Task {
         this.description = task.description;
         this.status = task.status;
         this.id = task.id;
+        this.startTime = task.startTime;
+        this.duration = task.duration;
     }
 
-    protected Task(int id, String name, TaskStatus status, String description) {
+    protected Task(int id, String name, TaskStatus status, String description, Duration duration, LocalDateTime startTime) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.status = status;
+        this.duration = duration;
+        this.startTime = startTime;
     }
 
     public String getName() {
@@ -59,6 +71,19 @@ public class Task {
         return status;
     }
 
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+
+    public LocalDateTime getEndTime() {
+        return startTime == null ? null : startTime.plus(duration);
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -71,10 +96,20 @@ public class Task {
         this.status = status;
     }
 
+    public void setDuration(Duration duration) {
+        this.duration = duration;
+    }
+
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
     public static Task fromString(String value) {
         String[] params = value.split(",");
         Task.increaseIdCounter();
-        return new Task(Integer.parseInt(params[0]), params[2], TaskStatus.valueOf(params[3]), params[4]);
+        LocalDateTime time = params[TASK_START_TIME].equals("null") ? null : LocalDateTime.parse(params[TASK_START_TIME]);
+        return new Task(Integer.parseInt(params[TASK_ID]), params[TASK_NAME], TaskStatus.valueOf(params[TASK_STATUS]), params[TASK_DESCRIPTION],
+                Duration.ofSeconds(Long.parseLong(params[TASK_DURATION]) * 60), time);
     }
 
     @Override
@@ -92,6 +127,8 @@ public class Task {
 
     @Override
     public String toString() {
-        return String.format("%d,%s,%s,%s,%s,", id, taskType, name, status, description);
+        String time = getStartTime() == null ? "null" : getStartTime().toString();
+        return String.format("%d,%s,%s,%s,%s,%d,%s,", id, taskType, name, status, description,
+                ((duration.toSeconds() + duration.toSecondsPart()) / 60), time);
     }
 }

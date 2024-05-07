@@ -71,6 +71,12 @@ public class TaskLinkedList {
         return linkedListToList;
     }
 
+    public void clearList() {
+        head = null;
+        tail = null;
+        size = 0;
+    }
+
     @Override
     public String toString() {
         return linkedListToList().toString();

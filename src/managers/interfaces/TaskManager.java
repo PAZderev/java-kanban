@@ -27,23 +27,25 @@ public interface TaskManager {
 
     Epic getEpicById(int id);
 
-    void createEpic(Epic epic);
+    boolean createEpic(Epic epic);
 
-    void createTask(Task task);
+    boolean createTask(Task task);
 
-    void createSubTask(SubTask subTask);
+    boolean createSubTask(SubTask subTask);
 
-    void updateTask(Task task);
+    boolean updateTask(Task task);
 
-    void updateSubTask(SubTask subTask);
+    boolean updateSubTask(SubTask subTask);
 
-    void updateEpic(Epic epic);
+    boolean updateEpic(Epic epic);
 
     void removeTaskByID(int id);
 
     void removeEpicByID(int id);
 
     void removeSubTaskByID(int id);
+
+    void clear();
 
     List<SubTask> getSubTasksByEpic(Epic epic);
 }

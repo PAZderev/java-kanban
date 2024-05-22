@@ -9,8 +9,10 @@ import java.time.LocalDateTime;
 import static managers.classes.FileBackedTaskManager.*;
 
 public class SubTask extends Task {
-    private final TaskType taskType = TaskType.SUBTASK;
     private int epicID;
+
+    public SubTask() {
+    }
 
     public SubTask(String name, String description, TaskStatus status,
                    Duration duration, LocalDateTime startTime, int epicID) {
@@ -19,12 +21,13 @@ public class SubTask extends Task {
             throw new IllegalArgumentException("EpicID не может равняться SubTaskID");
         }
         this.epicID = epicID;
+        this.taskType = TaskType.SUBTASK;
     }
 
     public SubTask(SubTask subTask) { // Дополнительный конструктор для создания копий без обновления id
         super(subTask);
         this.epicID = subTask.getEpicID();
-
+        this.taskType = TaskType.SUBTASK;
     }
 
     protected SubTask(int id, String name, TaskStatus status, String description,
@@ -34,6 +37,12 @@ public class SubTask extends Task {
             throw new IllegalArgumentException("EpicID не может равняться SubTaskID");
         }
         this.epicID = epicID;
+        this.taskType = TaskType.SUBTASK;
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.SUBTASK;
     }
 
     public int getEpicID() {

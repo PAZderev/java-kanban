@@ -6,6 +6,8 @@ import tasks.Epic;
 import tasks.SubTask;
 import tasks.Task;
 import utils.enums.TaskType;
+import utils.exceptions.NotFoundEpicException;
+import utils.exceptions.NotFoundException;
 
 import java.util.*;
 
@@ -70,9 +72,11 @@ public class InMemoryTaskManager implements TaskManager {
             case SUBTASK:
                 getSubTasks().stream()
                         .forEach(subTask -> {
-                            Epic epic = getEpicById(subTask.getEpicID());
-                            if (epic != null) {
+                            try {
+                                Epic epic = getEpicById(subTask.getEpicID());
                                 epic.removeSubTask(subTask);
+                            } catch (NotFoundEpicException ignored) {
+
                             }
                             historyManager.remove(subTask.getId());
                         });
@@ -82,77 +86,100 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public Task getTaskById(int id) {
+    public Task getTaskById(int id) throws NotFoundException {
+        if (!tasks.containsKey(id)) {
+            throw new NotFoundException("Task with id " + id + " not found");
+        }
         historyManager.add(tasks.get(id));
         return tasks.get(id);
     }
 
     @Override
     public SubTask getSubTaskById(int id) {
+        if (!subTasks.containsKey(id)) {
+            throw new NotFoundException("Subtask with id " + id + " not found");
+        }
         historyManager.add(subTasks.get(id));
         return subTasks.get(id);
     }
 
     @Override
     public Epic getEpicById(int id) {
+        if (!epics.containsKey(id)) {
+            throw new NotFoundEpicException("Epic with id " + id + " not found");
+        }
         historyManager.add(epics.get(id));
         return epics.get(id);
     }
 
     @Override
-    public void createEpic(Epic epic) {
+    public boolean createEpic(Epic epic) {
         Epic newEpic = new Epic(epic);
         epics.put(epic.getId(), newEpic);
+        return true;
     }
 
     @Override
-    public void createTask(Task task) {
+    public boolean createTask(Task task) {
         Task newTask = new Task(task);
-        if (checkTime(task)) {
+        boolean check = checkTime(task);
+        if (check) {
             tasks.put(task.getId(), newTask);
         }
-
+        return check;
     }
 
     @Override
-    public void createSubTask(SubTask subTask) {
+    public boolean createSubTask(SubTask subTask) {
         SubTask newSubTask = new SubTask(subTask);
-        if (checkTime(newSubTask)) {
+        boolean check = checkTime(newSubTask);
+        if (check) {
             subTasks.put(newSubTask.getId(), newSubTask);
-            if (getEpicById(newSubTask.getEpicID()) != null) {
-                getEpicById(newSubTask.getEpicID()).addSubTask(newSubTask); // Добавили subTask в эпик
+            try {
+                Epic epic = getEpicById(newSubTask.getEpicID());
+                epic.addSubTask(newSubTask); // Добавили subTask в эпик
+            } catch (NotFoundEpicException e) {
+                return true;
             }
         }
-
+        return check;
     }
 
     @Override
-    public void updateTask(Task task) {
+    public boolean updateTask(Task task) {
         Task updatedTask = new Task(task);
-        if (checkTime(updatedTask)) {
+        boolean check = checkTime(updatedTask);
+        if (check) {
             tasks.put(task.getId(), updatedTask);
         }
+        return check;
     }
 
     @Override
-    public void updateSubTask(SubTask subTask) {
+    public boolean updateSubTask(SubTask subTask) {
         SubTask updatedSubTask = new SubTask(subTask);
-        if (checkTime(updatedSubTask)) {
-            // Логика для обновления статуса эпика
-            int oldEpicID = subTasks.get(subTask.getId()).getEpicID();
-            Epic oldEpic = getEpicById(oldEpicID);
-            SubTask oldSubTask = subTasks.get(subTask.getId());
-            if (oldEpic != null) oldEpic.removeSubTask(oldSubTask);
-            Epic newEpic = getEpicById(subTask.getEpicID());
-            if (newEpic != null) newEpic.addSubTask(subTask);
-            // статус эпика обновится, даже если сам EpicID не поменялся
-
+        boolean check = checkTime(updatedSubTask);
+        if (check) {
             subTasks.put(subTask.getId(), updatedSubTask);
+            try {
+                // Логика для обновления статуса эпика
+                int oldEpicID = subTasks.get(subTask.getId()).getEpicID();
+                Epic oldEpic = getEpicById(oldEpicID);
+                SubTask oldSubTask = subTasks.get(subTask.getId());
+                oldEpic.removeSubTask(oldSubTask);
+                Epic newEpic = getEpicById(subTask.getEpicID());
+                newEpic.addSubTask(subTask);
+                // статус эпика обновится, даже если сам EpicID не поменялся
+            } catch (NotFoundEpicException e) {
+                return true;
+            }
+
         }
+        return check;
     }
 
     @Override
-    public void updateEpic(Epic epic) {
+    public boolean updateEpic(Epic epic) {
 
 
         List<SubTask> oldSubTasksTemp = getSubTasksByEpic(getEpicById(epic.getId()));
@@ -169,6 +196,7 @@ public class InMemoryTaskManager implements TaskManager {
         newSubTasks.stream()
                 .forEach(newEpic::addSubTask);
         epics.put(epic.getId(), newEpic);
+        return true;
     }
 
     private boolean checkTime(Task task) {
@@ -214,11 +242,24 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void removeSubTaskByID(int id) {
-        Epic epic = getEpicById(getSubTaskById(id).getEpicID());
-        epic.removeSubTask(getSubTaskById(id));
+        try {
+            Epic epic = getEpicById(getSubTaskById(id).getEpicID());
+            epic.removeSubTask(getSubTaskById(id));
+        } catch (NotFoundEpicException ignored) {
+
+        }
         historyManager.remove(id);
         prioritizedTasks.remove(subTasks.get(id));
         subTasks.remove(id);
+    }
+
+    @Override
+    public void clear() {
+        removeAllTasksByType(TaskType.TASK);
+        removeAllTasksByType(TaskType.SUBTASK);
+        removeAllTasksByType(TaskType.EPIC);
+        historyManager.clearHistory();
+        prioritizedTasks.clear();
     }
 
     @Override

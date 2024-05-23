@@ -10,16 +10,22 @@ import java.util.Objects;
 import static managers.classes.FileBackedTaskManager.*;
 
 public class Task {
-    private final TaskType taskType = TaskType.TASK;
+
+    protected TaskType taskType;
     private String name;
     private String description;
-    private final int id;
+    private int id;
     private static int idCounter;
     private TaskStatus status;
     private Duration duration;
     private LocalDateTime startTime;
 
+    public Task() {
+
+    }
+
     public Task(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
+        this.taskType = TaskType.TASK;
         this.name = name;
         this.description = description;
         this.status = status;
@@ -30,6 +36,7 @@ public class Task {
     }
 
     public Task(Task task) {
+        this.taskType = TaskType.TASK;
         this.name = task.name;
         this.description = task.description;
         this.status = task.status;
@@ -39,6 +46,7 @@ public class Task {
     }
 
     protected Task(int id, String name, TaskStatus status, String description, Duration duration, LocalDateTime startTime) {
+        this.taskType = TaskType.TASK;
         this.id = id;
         this.name = name;
         this.description = description;
@@ -84,6 +92,14 @@ public class Task {
         return startTime == null ? null : startTime.plus(duration);
     }
 
+    public TaskType getTaskType() {
+        return taskType;
+    }
+
+    public void setTaskType(TaskType taskType) {
+        this.taskType = taskType;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -102,6 +118,10 @@ public class Task {
 
     public void setStartTime(LocalDateTime startTime) {
         this.startTime = startTime;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public static Task fromString(String value) {

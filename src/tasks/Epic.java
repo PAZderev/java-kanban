@@ -10,26 +10,32 @@ import java.util.*;
 import static managers.classes.FileBackedTaskManager.*;
 
 public class Epic extends Task {
-    private final TaskType taskType = TaskType.EPIC;
     private Map<Integer, TaskStatus> subTasksStatuses; // Подзадачи будем хранить в HashMap, где ключ - айдишник
     private HashMap<TaskStatus, Integer> tasksCounterByStatus; // Словарь для подсчета подзадач в определенном статусе
     private SortedMap<Task, Integer> subTasksOrderedByStartTime; // Словарь для быстрого расчета времени Epic`а
     private SortedMap<Task, Integer> subTasksOrderedByEndTime;
     private LocalDateTime endTime;
 
+    public Epic() {
+        initializeMaps(LocalDateTime.now());
+    }
+
     public Epic(String name, String description, TaskStatus status, Duration duration, LocalDateTime startTime) {
         super(name, description, TaskStatus.NEW, Duration.ofSeconds(0), LocalDateTime.now());
         initializeMaps(startTime);
+        taskType = TaskType.EPIC;
     }
 
     public Epic(Epic epic) { // Дополнительный конструктор для создания копий без обновления id
         super(epic);
         initializeMaps(epic.getStartTime());
+        taskType = TaskType.EPIC;
     }
 
     protected Epic(int id, String name, TaskStatus status, String description, Duration duration, LocalDateTime startTime) {
         super(id, name, status, description, duration, startTime);
         initializeMaps(startTime);
+        taskType = TaskType.EPIC;
     }
 
     // Так как в каждом конструкторе идёт инициализация Map, то вынесем это в отдельный метод.
@@ -110,6 +116,39 @@ public class Epic extends Task {
         return subTasksStatuses.keySet();
     }
 
+    public SortedMap<Task, Integer> getSubTasksOrderedByStartTime() {
+        return subTasksOrderedByStartTime;
+    }
+
+    public SortedMap<Task, Integer> getSubTasksOrderedByEndTime() {
+        return subTasksOrderedByEndTime;
+    }
+
+    @Override
+    public TaskType getTaskType() {
+        return TaskType.EPIC;
+    }
+
+    public void setSubTasksStatuses(Map<Integer, TaskStatus> subTasksStatuses) {
+        this.subTasksStatuses = subTasksStatuses;
+    }
+
+    public void setTasksCounterByStatus(HashMap<TaskStatus, Integer> tasksCounterByStatus) {
+        this.tasksCounterByStatus = tasksCounterByStatus;
+    }
+
+    public void setSubTasksOrderedByStartTime(SortedMap<Task, Integer> subTasksOrderedByStartTime) {
+        this.subTasksOrderedByStartTime = subTasksOrderedByStartTime;
+    }
+
+    public void setSubTasksOrderedByEndTime(SortedMap<Task, Integer> subTasksOrderedByEndTime) {
+        this.subTasksOrderedByEndTime = subTasksOrderedByEndTime;
+    }
+
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
     @Override
     public TaskStatus getStatus() {
         if (tasksCounterByStatus.get(TaskStatus.DONE) == subTasksStatuses.size() && !subTasksStatuses.isEmpty()) {
@@ -147,4 +186,5 @@ public class Epic extends Task {
         return String.format("%d,%s,%s,%s,%s,%d,%s,", getId(), taskType, getName(), getStatus(), getDescription(),
                 ((getDuration().toSeconds() + getDuration().toSecondsPart()) / 60), time);
     }
+
 }
